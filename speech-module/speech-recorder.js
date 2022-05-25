@@ -43,6 +43,7 @@ const setActionsListener = () => {
 
 const recordSpeech = () => {
   recognition.onresult = (event) => { 
+    console.log(event);
     const recordData = event.results;
     transcriptSpeech = recordData[recordData.length - 1][0].transcript;
     printSpeech();
