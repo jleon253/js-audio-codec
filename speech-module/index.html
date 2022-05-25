@@ -12,29 +12,32 @@
       href="styles.css">
   </head>
 
-  <body>
-    <!-- <div class="container">
-      <div>
-        <button id="btnStartRecord">Start</button>
-        <button id="btnStopRecord">Stop</button>
+  <body>  
+    <div class="wrapper">
+      <div class="container-speech">
+        <div id="txtSpeech"></div>
       </div>
-      <div>
-        <textarea name="speech"
-          id="txtSpeech"
-          cols="30"
-          rows="10"></textarea>
+
+      <div class="container-voice">
+        <canvas id="canvasGraph" width="1000" height="100"></canvas>
+        <div class="optionsGraph">
+          <label id="labelVisualType" for="visual">Gráfico</label>
+          <select id="selectVisualType" name="visual">
+            <option value="wave" selected>Onda</option>
+            <option value="bars">Barras</option>
+            <option value="off">Ninguno</option>
+          </select>
+        </div>
       </div>
-    </div> -->
 
-    <!-- <div class="container-volume">
-      <span>Volume:</span>
-      <meter id="meter" high="0.25" max="1" value="0"></meter>
-      <button type="button" id="startMeter">Start</button>
-      <button type="button" id="stopMeter">Stop</button>
-    </div> -->
+      <div class="container-buttons">
+        <button id="btnStartRecord" type="button">Comenzar</button>
+        <button id="btnStopRecord" type="button">Detener</button>
+      </div>
+    </div>
 
-    <!-- <script src="speech-recorder.js"></script>
-    <script src="audio-volume.js"></script> -->
+    <script src="speech-recorder.js"></script>
+    <script src="voice-input.js"></script>
 
   </body>
 

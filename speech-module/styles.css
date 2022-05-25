@@ -1,8 +1,62 @@
-.container {
-  /* display: block;
-  left: 50%;
+html, body {
+  background-color: #000;
+  height: 100%;
+  margin: 0;
+  width: 100%;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100%;
+  margin: auto;
+  width: 80%;
+}
+
+.container-speech {
+  height: 150px;
+  margin: 20px 0px;
+  overflow: auto;
+  position: relative;
+}
+
+.container-speech #txtSpeech {
+  font-size: 18px;
+  text-align: center;
   position: absolute;
   top: 50%;
-  transform: translate(-50%, -50%);
-  width: max-content; */
+  transform: translateY(-50%);
+  width: 100%;
+}
+
+.container-voice {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0px;
+  width: 100%;
+}
+
+.container-voice #canvasGraph {
+  height: 100px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.container-voice .optionsGraph {
+  display: flex;
+  gap: 10px;
+  margin: 10px auto;
+}
+
+.container-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 10px auto;
+  width: 100%;
+}
+
+#labelVisualType, #txtSpeech {
+  color: #fff;
 }

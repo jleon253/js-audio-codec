@@ -2,24 +2,26 @@
 
 const options = {'audio': true};
 
-let btnStartVoice, selectVisualType;
-let canvas, canvasCtx, width, height;
-let analyser, bufferLength, dataArray, drawVisual, source, visualType;
+let btnStartRecord, btnStopRecord, selectVisualType;
+let canvasGraph, canvasGraphCtx, canvasWidth, canvasHeight;
+let analyser, audioContext, bufferLength, dataArray, drawVisual, gainNode, source, streamVoice, visualType;
 
 // ------------ Functions -----------------
 
 const getElements = () => { 
-  btnStartVoice = document.getElementById('btnStartVoice');
-  canvas = document.getElementById('visualizer');
-  selectVisualType = document.getElementById('visual');
+  btnStartRecord = document.getElementById('btnStartRecord');
+  btnStopRecord = document.getElementById('btnStopRecord');
+  canvasGraph = document.getElementById('canvasGraph');
+  selectVisualType = document.getElementById('selectVisualType');
 };
 
 const getCanvasContext = () => {
-  canvasCtx = canvas.getContext('2d');
+  canvasGraphCtx = canvasGraph.getContext('2d');
 };
 
 const setActions = () => { 
-  btnStartVoice.addEventListener('click', startVoiceInput);
+  btnStartRecord.addEventListener('click', startVoiceInput);
+  btnStopRecord.addEventListener('click', stopVoiceInput);
   selectVisualType.addEventListener('change', () => {
     window.cancelAnimationFrame(drawVisual);
     visualize();
@@ -31,10 +33,16 @@ const startVoiceInput = () => {
 
   navigator.mediaDevices.getUserMedia(options)
     .then(stream => {
-      let audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      audioContext = new (window.AudioContext || window.webkitAudioContext)();
       source = audioContext.createMediaStreamSource(stream);
+      streamVoice = stream;
+
       analyser = audioContext.createAnalyser();
+      gainNode = audioContext.createGain();
+
+      gainNode.connect(analyser);
       source.connect(analyser);
+
       visualize();
     });
 };
@@ -55,14 +63,14 @@ const visualize = () => {
 };
 
 const getCanvasSize = () => {
-  width = canvas.width;
-  height = canvas.height;
+  canvasWidth = canvasGraph.width;
+  canvasHeight = canvasGraph.height;
 };
 
 const resetCanvas = () => { 
-  canvasCtx.clearRect(0, 0, width, height);
-  canvasCtx.fillRect(0, 0, width, height);
-  canvasCtx.fillStyle = 'rgb(0, 0, 0)';
+  canvasGraphCtx.clearRect(0, 0, canvasWidth, canvasHeight);
+  canvasGraphCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+  canvasGraphCtx.fillStyle = 'rgb(0, 0, 0)';
 };
 
 const setUpAnalyser = (value, type = '') => { 
@@ -72,54 +80,60 @@ const setUpAnalyser = (value, type = '') => {
 };
 
 const drawWave = () => { 
-  let sliceWidth = width * 1.0 / bufferLength;
+  let sliceWidth = canvasWidth * 1.0 / bufferLength;
   let x = 0;
 
   drawVisual = requestAnimationFrame(drawWave);
   analyser.getByteTimeDomainData(dataArray);
 
-  canvasCtx.fillStyle = 'rgb(0, 0, 0)';
-  canvasCtx.fillRect(0, 0, width, height);
-  canvasCtx.lineWidth = 2;
-  canvasCtx.strokeStyle = 'rgb(255,255,255)';
-  canvasCtx.beginPath();
+  canvasGraphCtx.fillStyle = 'rgb(0, 0, 0)';
+  canvasGraphCtx.fillRect(0, 0, canvasWidth, canvasHeight);
+  canvasGraphCtx.lineWidth = 2;
+  canvasGraphCtx.strokeStyle = 'rgb(255,255,255)';
+  canvasGraphCtx.beginPath();
 
   for (let i = 0; i < bufferLength; i++) {
      var v = dataArray[i] / 128.0;
-     var y = v * height/2;
+     var y = v * canvasHeight/2;
 
       if(i === 0) {
-        canvasCtx.moveTo(x, y);
+        canvasGraphCtx.moveTo(x, y);
       } else {
-        canvasCtx.lineTo(x, y);
+        canvasGraphCtx.lineTo(x, y);
       }
 
       x += sliceWidth;
   }
 
-  canvasCtx.lineTo(canvas.width, canvas.height / 2);
-  canvasCtx.stroke();
+  canvasGraphCtx.lineTo(canvasGraph.width, canvasGraph.height / 2);
+  canvasGraphCtx.stroke();
 };
 
 const drawBars = () => { 
-  let barWidth = (width / bufferLength) * 2.5;
+  let barWidth = (canvasWidth / bufferLength) * 2.5;
   let barHeight;
   let x = 0;
 
   drawVisual = requestAnimationFrame(drawBars);
   analyser.getByteFrequencyData(dataArray);
 
-  canvasCtx.fillStyle = 'rgb(0, 0, 0)';
-  canvasCtx.fillRect(0, 0, width, height);
+  canvasGraphCtx.fillStyle = 'rgb(0, 0, 0)';
+  canvasGraphCtx.fillRect(0, 0, canvasWidth, canvasHeight);
 
   for(let i = 0; i < bufferLength; i++) {
     barHeight = dataArray[i];
 
-    canvasCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
-    canvasCtx.fillRect(x, height - barHeight / 2, barWidth, barHeight / 2);
+    canvasGraphCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
+    canvasGraphCtx.fillRect(x, canvasHeight - barHeight / 2, barWidth, barHeight / 2);
 
     x += barWidth + 1;
   }
+};
+
+const stopVoiceInput = () => { 
+  window.cancelAnimationFrame(drawVisual);
+  audioContext?.close();
+  streamVoice?.getTracks().forEach(track => track.stop());
 };
 
 getElements();

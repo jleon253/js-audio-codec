@@ -13,7 +13,7 @@ const recognitionSetup = () => {
 };
 
 const getIdsDOM = () => { 
-  document.querySelectorAll('button, textarea').forEach((element) => {
+  document.querySelectorAll('button, #txtSpeech').forEach((element) => {
     elements[element.id] = element;
   });
 }; 
@@ -43,7 +43,6 @@ const setActionsListener = () => {
 
 const recordSpeech = () => {
   recognition.onresult = (event) => { 
-    console.log(event);
     const recordData = event.results;
     transcriptSpeech = recordData[recordData.length - 1][0].transcript;
     printSpeech();
@@ -51,7 +50,7 @@ const recordSpeech = () => {
 };
 
 const printSpeech = () => { 
-  elements['txtSpeech'].value += transcriptSpeech;
+  elements['txtSpeech'].innerHTML += transcriptSpeech;
 };
 
 recognitionSetup();
