@@ -13,7 +13,7 @@ const recognitionSetup = () => {
 };
 
 const getIdsDOM = () => { 
-  document.querySelectorAll('button, #txtSpeech').forEach((element) => {
+  document.querySelectorAll('#btnStartRecord, #btnStopRecord, #txtSpeech').forEach((element) => {
     elements[element.id] = element;
   });
 }; 
@@ -23,6 +23,7 @@ const actionsSetup = () => {
     switch(id) {
       case 'btnStartRecord':
         actions[id] = () => {
+          console.log('accion');
           recognition.start();
         };
         break;
@@ -43,6 +44,7 @@ const setActionsListener = () => {
 
 const recordSpeech = () => {
   recognition.onresult = (event) => { 
+    console.log(event);
     const recordData = event.results;
     transcriptSpeech = recordData[recordData.length - 1][0].transcript;
     printSpeech();

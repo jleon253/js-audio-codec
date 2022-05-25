@@ -5,6 +5,10 @@ html, body {
   width: 100%;
 }
 
+.disabled {
+  opacity: 0.3;
+}
+
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -24,6 +28,7 @@ html, body {
 .container-speech #txtSpeech {
   font-size: 18px;
   text-align: center;
+  font-style: italic;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -55,6 +60,23 @@ html, body {
   justify-content: center;
   margin: 10px auto;
   width: 100%;
+}
+
+.container-buttons #btnStartRecord {
+  background-image: url('assets/microphone.png');
+}
+
+.container-buttons #btnStopRecord {
+  background-image: url('assets/stop.png');
+}
+
+.container-buttons #btnStartRecord,
+.container-buttons #btnStopRecord {
+  width: 50px;
+  height: 50px;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 #labelVisualType, #txtSpeech {

@@ -13,6 +13,8 @@ const getElements = () => {
   btnStopRecord = document.getElementById('btnStopRecord');
   canvasGraph = document.getElementById('canvasGraph');
   selectVisualType = document.getElementById('selectVisualType');
+
+  btnStopRecord.classList.add('disabled');
 };
 
 const getCanvasContext = () => {
@@ -29,7 +31,8 @@ const setActions = () => {
 };
 
 const startVoiceInput = () => {
-  // btnStartVoice.disabled = true;
+  btnStartRecord.classList.add('disabled');
+  btnStopRecord.classList.remove('disabled');
 
   navigator.mediaDevices.getUserMedia(options)
     .then(stream => {
@@ -123,7 +126,7 @@ const drawBars = () => {
   for(let i = 0; i < bufferLength; i++) {
     barHeight = dataArray[i];
 
-    canvasGraphCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',50,50)';
+    canvasGraphCtx.fillStyle = 'rgb(' + (barHeight + 100) + ',0,128)';
     canvasGraphCtx.fillRect(x, canvasHeight - barHeight / 2, barWidth, barHeight / 2);
 
     x += barWidth + 1;
@@ -131,6 +134,8 @@ const drawBars = () => {
 };
 
 const stopVoiceInput = () => { 
+  btnStartRecord.classList.remove('disabled');
+  btnStopRecord.classList.add('disabled');
   window.cancelAnimationFrame(drawVisual);
   audioContext?.close();
   streamVoice?.getTracks().forEach(track => track.stop());
